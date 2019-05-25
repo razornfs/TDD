@@ -3,13 +3,10 @@ package pl.sda.javawwa18;
 import org.junit.Test;
 import pl.sda.javawwa18.exception.RoleNotAssignedException;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CustomerTest {
 
@@ -38,7 +35,9 @@ public class CustomerTest {
 
     @Test
     public void non_existing_user_has_no_roles() {
-
+        Customer c001 = new Customer("001");
+        c001.login();
+        assertNull(c001.roles);
     }
 
     @Test
@@ -56,23 +55,31 @@ public class CustomerTest {
     }
 
     @Test
-    public void user_with_CAN_SIMULATE_ORDER_simulates_order() {
-
+    public void user_with_CAN_SIMULATE_ORDER_simulates_order() throws Exception {
+        Customer c090 = new Customer("090");
+        c090.login();
+        c090.simulateOrder();
     }
 
     @Test(expected = RoleNotAssignedException.class)
-    public void user_without_CAN_SIMULATE_ORDER_cannot_simulate_order() {
-
+    public void user_without_CAN_SIMULATE_ORDER_cannot_simulate_order() throws Exception {
+        Customer c007 = new Customer("007");
+        c007.login();
+        c007.simulateOrder();
     }
 
     @Test
-    public void user_with_CAN_VIEW_PRICES_views_prices() {
-
+    public void user_with_CAN_VIEW_PRICES_views_prices() throws Exception {
+        Customer c200 = new Customer("200");
+        c200.login();
+        c200.viewPrices();
     }
 
     @Test(expected = RoleNotAssignedException.class)
-    public void user_without_CAN_VIEW_PRICES_cannot_view_prices() {
-
+    public void user_without_CAN_VIEW_PRICES_cannot_view_prices() throws Exception {
+        Customer c007 = new Customer("007");
+        c007.login();
+        c007.viewPrices();
     }
 
 }
