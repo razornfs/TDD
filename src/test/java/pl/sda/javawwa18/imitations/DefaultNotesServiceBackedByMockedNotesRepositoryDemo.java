@@ -1,10 +1,12 @@
 package pl.sda.javawwa18.imitations;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import pl.sda.javawwa18.exception.NoSuchUserException;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -12,9 +14,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class DefaultNotesServiceBackedByMockedNotesRepositoryDemo {
 
@@ -32,7 +32,7 @@ public class DefaultNotesServiceBackedByMockedNotesRepositoryDemo {
             }
         }).when(mockedNotesRepository).save(any(Note.class));
 
-        //other methods...
+        //assertjdemo methods...
         //getAllNotesOf -> 'proste mockowanie' -> per metoda testowa
 
         //clear -> answer
@@ -70,6 +70,8 @@ public class DefaultNotesServiceBackedByMockedNotesRepositoryDemo {
         NotesService notesService = DefaultNotesService.createWith(mockedNotesRepository);
         double avg = notesService.averageOf("PW");   //uzywa wewnatrz NotesRepository#getAllNotesOf("PW")
         assertEquals(5.0, avg, 0.00001);
+        verify(mockedNotesRepository, only()).getAllNotesOf("PW");
+        verify(mockedNotesRepository, never()).getAllNotesOf("Adam Miller");
     }
 
     @Test(expected = NoSuchUserException.class)
@@ -78,6 +80,17 @@ public class DefaultNotesServiceBackedByMockedNotesRepositoryDemo {
         when(mockedNotesRepository.getAllNotesOf("PW")).thenReturn(Collections.EMPTY_LIST);
         NotesService notesService = DefaultNotesService.createWith(mockedNotesRepository);
         notesService.averageOf("PW");
+    }
+
+    //ignorujemy ten test poniewaz sygnatura NotesRepository#save nie przewiduje wyrzucenia wyjatku IOException
+    @Ignore
+    @Test(expected = IOException.class)
+    public void should_throw_on_persistance_layer_exception() {
+        NotesRepository spyNotesRepository = spy(ImitatedNotesRepository.class);
+        doThrow(new IOException()).when(spyNotesRepository).save(Note.of("PW", 3.0));
+        NotesService notesService = DefaultNotesService.createWith(spyNotesRepository);
+        notesService.add(Note.of("AM", 5.0));
+        notesService.add(Note.of("PW", 3.0));
     }
 
     private void updateJournal(String name, Double score) {

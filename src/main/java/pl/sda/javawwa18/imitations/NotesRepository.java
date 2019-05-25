@@ -1,5 +1,6 @@
 package pl.sda.javawwa18.imitations;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface NotesRepository {
@@ -10,5 +11,4 @@ public interface NotesRepository {
     List<Note> getAllNotesOf(String fullName);
     //Oproznia pamiec 'trwala' do '0'
     void removeAll();
-
 }
