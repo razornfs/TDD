@@ -42,13 +42,17 @@ public class CustomerTest {
     }
 
     @Test
-    public void user_with_CAN_PLACE_ORDER_places_order() {
-
+    public void user_with_CAN_PLACE_ORDER_places_order() throws Exception {
+        Customer c090 = new Customer("090");
+        c090.login();
+        c090.placeOrder();
     }
 
     @Test(expected = RoleNotAssignedException.class)
-    public void user_without_CAN_PLACE_ORDER_cannot_place_order() {
-
+    public void user_without_CAN_PLACE_ORDER_cannot_place_order() throws Exception {
+        Customer c007 = new Customer("007");
+        c007.login();
+        c007.placeOrder();
     }
 
     @Test
