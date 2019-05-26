@@ -48,7 +48,37 @@ public class TicTacToeGame {
     }
 
     private static void singlePlayerGame(final Scanner sc) {
+        Player player = new Player(getSignForChar(getPlayerSignChar(sc)));
+        AIPlayer aiPlayer = new AIPlayer(player.getPlayerSign().other());
 
+        Board.Sign startingSing = getStartingSign();
+        System.out.println(String.format("Gre zaczyna gracz: %s", startingSing));
+        Board board = new Board(startingSing);
+
+        Player currentPlayer = player;
+        boolean isGameWon = false;
+
+        do {
+            board.printBoard();
+            currentPlayer = getPlayerForSign(board.getCurrentSign(), player, aiPlayer);
+
+            //jezeli komputer
+            if(currentPlayer instanceof AIPlayer) {
+                aiPlayer.makeMove(board);
+            }
+            //jezeli czlowiek
+            else {
+                board.placeSign(currentPlayer, getPlayerSquare(sc));
+            }
+
+            isGameWon = board.checkGameWon(currentPlayer);
+
+            if(isGameWon) {
+                board.printBoard();
+                System.out.println(String.format("Gratulacje, gre wygral gracz %s", currentPlayer.getPlayerSign().name()));
+            }
+        }
+        while(!isGameWon);
     }
 
     private static Player getPlayerForSign(Board.Sign currentSign, Player playerA, Player playerB) {
@@ -56,6 +86,13 @@ public class TicTacToeGame {
             return playerA;
         else
             return playerB;
+    }
+
+    private static Board.Sign getSignForChar(char c) {
+        if(c == 'O')
+            return Board.Sign.O;
+
+        return Board.Sign.X;
     }
 
     private static Board.Sign getStartingSign() {
@@ -77,6 +114,19 @@ public class TicTacToeGame {
         while(square < 0 || square > 9);
 
         return square;
+    }
+
+    private static char getPlayerSignChar(Scanner sc) {
+        System.out.println("Jakim znakiem chcesz grac? [X] czy [O]?");
+        sc = new Scanner(System.in);
+
+        char signChar = 'a';
+        do {
+            signChar = sc.nextLine().charAt(0);
+        }
+        while(signChar != 'O' && signChar != 'X');
+
+        return signChar;
     }
 
 }
