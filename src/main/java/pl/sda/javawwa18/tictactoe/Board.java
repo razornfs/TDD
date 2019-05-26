@@ -7,9 +7,9 @@ public class Board {
     private Sign[] signs = new Sign[9];
     private Sign currentSign;
     public static String[] winningSequences = {
-        "SSS......", "...SSS..."   , "......SSS",   //winning rows
-        "S..S..S..", ".S..S..S.", "..S..S..S",  //winning cols
-        "S...S...S", "..S.S.S.."    //diagonals
+            "SSS......", "...SSS...", "......SSS",   //winning rows
+            "S..S..S..", ".S..S..S.", "..S..S..S",  //winning cols
+            "S...S...S", "..S.S.S.."    //diagonals
     };
 
     public Board(Sign currentSign) {
@@ -18,9 +18,11 @@ public class Board {
 
     public void placeSign(Player player, int square) {
         //argument opisuje to JAKIE WARUNKI SA POPRAWNE
-        Preconditions.checkArgument(square >= 0 && square < 9, "Cannot place sign outside of board.");
+/*        Preconditions.checkArgument(square >= 0 && square < 9, "Cannot place sign outside of board.");
         Preconditions.checkArgument(signs[square] == null, "Cannot place sign on already taken square.");
-        Preconditions.checkArgument(player.getPlayerSign().equals(currentSign), String.format("Current turn is for sign %s", player.getPlayerSign().other().name()));
+        Preconditions.checkArgument(player.getPlayerSign().equals(currentSign),
+                                    String.format("Current turn is for sign %s",
+                                                  player.getPlayerSign().other().name()));*/
 
         signs[square] = player.getPlayerSign();
         currentSign = player.getPlayerSign().other();
@@ -28,11 +30,10 @@ public class Board {
 
     String convertBoardToSequence() {
         StringBuilder sequenceBuilder = new StringBuilder();
-        for(Sign s : signs) {
-            if(s != null) {
+        for (Sign s : signs) {
+            if (s != null) {
                 sequenceBuilder.append(s.name());
-            }
-            else {
+            } else {
                 sequenceBuilder.append(".");
             }
         }
@@ -57,17 +58,17 @@ public class Board {
 
         //6 + 0 -> 6
         //6 + 2 -> 8
-        for(int row = 0; row < 3; row++) {
-            for(int col = 0; col < 3; col++) {
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
                 boardBuilder.append("|");
                 Sign signOnGivenSquare = signs[row * 3 + col];
-                if(signOnGivenSquare != null)
+                if (signOnGivenSquare != null)
                     boardBuilder.append(signOnGivenSquare.name());
                 else
                     boardBuilder.append(row * 3 + col);
             }
             boardBuilder.append("|");
-            if(row != 2)
+            if (row != 2)
                 boardBuilder.append("\n");
         }
 
@@ -76,22 +77,34 @@ public class Board {
 
     public boolean checkGameWon(Player player) {
         final String convertedBoard = convertBoardToSequence();
-        for(String winningSequence : winningSequences) {
+        for (String winningSequence : winningSequences) {
             int winningCharsCount = 0;
-            for(int i = 0; i < winningSequence.length(); i++) {
-                if(winningSequence.charAt(i) == 'S') {
-                    if(convertedBoard.charAt(i) == player.getPlayerSign().name().charAt(0)) {
+            for (int i = 0; i < winningSequence.length(); i++) {
+                if (winningSequence.charAt(i) == 'S') {
+                    if (convertedBoard.charAt(i) == player.getPlayerSign().name().charAt(0)) {
                         winningCharsCount++;
-                    }
-                    else {
+                    } else {
                         break;
                     }
                 }
             }
-            if(winningCharsCount == 3)
+            if (winningCharsCount == 3)
                 return true;
         }
         return false;
+    }
+
+    public boolean checkGameWon(Board.Sign sign) {
+        return checkGameWon(new Player(sign));
+    }
+
+    public boolean isFull() {
+        for (Sign sign : signs) {
+            if (sign == null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public enum Sign {

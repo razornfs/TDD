@@ -15,12 +15,11 @@ public class TicTacToeGame {
         }
         //regula De Moivre
         //NIE (lg = 1 V lg = 2) ---> NIE lg = 1 AND NIE lg = 2
-        while(noOfPlayers != 1 && noOfPlayers != 2);
+        while (noOfPlayers != 1 && noOfPlayers != 2);
 
-        if(noOfPlayers == 1) {
+        if (noOfPlayers == 1) {
             singlePlayerGame(sc);
-        }
-        else {
+        } else {
             multiPlayerGame(sc);
         }
     }
@@ -37,44 +36,65 @@ public class TicTacToeGame {
         do {
             board.printBoard();
             currentPlayer = getPlayerForSign(board.getCurrentSign(), playerA, playerB);
-            board.placeSign(currentPlayer, getPlayerSquare(sc));
+            board.placeSign(currentPlayer, getPlayerSquare(sc, currentPlayer, board));
             isGameWon = board.checkGameWon(currentPlayer);
 
-            if(isGameWon)
+            if (isGameWon)
                 board.printBoard();
-                System.out.println(String.format("Gratulacje, gre wygral gracz %s", currentPlayer.getPlayerSign().name()));
+            System.out.println(String.format("Gratulacje, gre wygral gracz %s", currentPlayer.getPlayerSign().name()));
         }
-        while(!isGameWon);
+        while (!isGameWon);
     }
 
     private static void singlePlayerGame(final Scanner sc) {
+        Board board = new Board(Board.Sign.X);
+        AIPlayer aiPlayer = new AIPlayer(Board.Sign.X);
+        Player player = new Player(Board.Sign.O);
 
+        Player currentPlayer = aiPlayer;
+        boolean isGameWon = false;
+
+        do {
+            currentPlayer = getPlayerForSign(board.getCurrentSign(), aiPlayer, player);
+            board.placeSign(currentPlayer, getPlayerSquare(sc, currentPlayer, board));
+            isGameWon = board.checkGameWon(currentPlayer);
+
+            if (isGameWon) {
+                board.printBoard();
+                System.out.println(
+                        String.format("Gratulacje, gre wygral gracz %s", currentPlayer.getPlayerSign().name()));
+            }
+        }
+        while (!isGameWon);
     }
 
     private static Player getPlayerForSign(Board.Sign currentSign, Player playerA, Player playerB) {
-        if(playerA.getPlayerSign().equals(currentSign))
+        if (playerA.getPlayerSign().equals(currentSign))
             return playerA;
         else
             return playerB;
     }
 
     private static Board.Sign getStartingSign() {
-        if(Math.random() > 0.5) {
+        if (Math.random() > 0.5) {
             return Board.Sign.X;
-        }
-        else {
+        } else {
             return Board.Sign.O;
         }
     }
 
-    private static int getPlayerSquare(final Scanner sc) {
+    private static int getPlayerSquare(final Scanner sc, Player player, Board board) {
+        if (player instanceof AIPlayer) {
+            return ((AIPlayer) player).getOptimalMove(board);
+        }
+        board.printBoard();
         System.out.println("Ktora pozycje chcesz zajac?");
 
         int square = 10;
         do {
             square = sc.nextInt();
         }
-        while(square < 0 || square > 9);
+        while (square < 0 || square > 9);
 
         return square;
     }
