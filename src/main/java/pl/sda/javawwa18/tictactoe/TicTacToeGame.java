@@ -47,14 +47,15 @@ public class TicTacToeGame {
     }
 
     private static void singlePlayerGame(final Scanner sc) {
-        Board board = new Board(Board.Sign.X);
         AIPlayer aiPlayer = new AIPlayer(Board.Sign.X);
         Player player = new Player(Board.Sign.O);
+        Board board = new Board(player.getPlayerSign());
+        System.out.println("Grasz jako " + player.getPlayerSign());
 
-        Player currentPlayer = aiPlayer;
+        Player currentPlayer = player;
         boolean isGameWon = false;
 
-        do {
+        while (true) {
             currentPlayer = getPlayerForSign(board.getCurrentSign(), aiPlayer, player);
             board.placeSign(currentPlayer, getPlayerSquare(sc, currentPlayer, board));
             isGameWon = board.checkGameWon(currentPlayer);
@@ -63,9 +64,14 @@ public class TicTacToeGame {
                 board.printBoard();
                 System.out.println(
                         String.format("Gratulacje, gre wygral gracz %s", currentPlayer.getPlayerSign().name()));
+                break;
+            }
+            if (board.isFull()) {
+                board.printBoard();
+                System.out.println("Remis");
+                break;
             }
         }
-        while (!isGameWon);
     }
 
     private static Player getPlayerForSign(Board.Sign currentSign, Player playerA, Player playerB) {
