@@ -104,5 +104,4 @@ public class TicTacToeGame {
 
         return square;
     }
-
 }
