@@ -34,25 +34,42 @@ public class TicTacToeGame {
         Player currentPlayer = playerA;
 
         do {
-            board.printBoard();
             currentPlayer = getPlayerForSign(board.getCurrentSign(), playerA, playerB);
             board.placeSign(currentPlayer, getPlayerSquare(sc, currentPlayer, board));
             isGameWon = board.checkGameWon(currentPlayer);
 
-            if (isGameWon)
+            if (isGameWon) {
                 board.printBoard();
-            System.out.println(String.format("Gratulacje, gre wygral gracz %s", currentPlayer.getPlayerSign().name()));
+                System.out.println(
+                        String.format("Gratulacje, gre wygral gracz %s", currentPlayer.getPlayerSign().name()));
+            }
         }
         while (!isGameWon);
     }
 
     private static void singlePlayerGame(final Scanner sc) {
-        AIPlayer aiPlayer = new AIPlayer(Board.Sign.X);
-        Player player = new Player(Board.Sign.O);
-        Board board = new Board(player.getPlayerSign());
+        AIPlayer aiPlayer;
+        Player player;
+        Board board;
+        if (Math.random() < 0.5) {
+            aiPlayer = new AIPlayer(Board.Sign.X);
+            player = new Player(Board.Sign.O);
+        } else {
+            aiPlayer = new AIPlayer(Board.Sign.O);
+            player = new Player(Board.Sign.X);
+        }
+        Player currentPlayer;
+        if (Math.random() < 0.5) {
+            board = new Board(aiPlayer.getPlayerSign());
+            currentPlayer = aiPlayer;
+            System.out.println("Grę zaczyna komputer");
+        } else {
+            board = new Board(player.getPlayerSign());
+            currentPlayer = player;
+            System.out.println("Zaczynasz grę");
+        }
         System.out.println("Grasz jako " + player.getPlayerSign());
 
-        Player currentPlayer = player;
         boolean isGameWon = false;
 
         while (true) {
@@ -62,8 +79,11 @@ public class TicTacToeGame {
 
             if (isGameWon) {
                 board.printBoard();
-                System.out.println(
-                        String.format("Gratulacje, gre wygral gracz %s", currentPlayer.getPlayerSign().name()));
+                if (currentPlayer instanceof AIPlayer) {
+                    System.out.println("Wygrywa komputer");
+                } else {
+                    System.out.println("Gratulacje, wygrales gre!");
+                }
                 break;
             }
             if (board.isFull()) {

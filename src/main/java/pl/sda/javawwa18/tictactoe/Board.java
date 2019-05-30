@@ -18,9 +18,9 @@ public class Board {
 
     public void placeSign(Player player, int square) {
         //argument opisuje to JAKIE WARUNKI SA POPRAWNE
-/*        Preconditions.checkArgument(square >= 0 && square < 9, "Cannot place sign outside of board.");
+        Preconditions.checkArgument(square >= 0 && square < 9, "Cannot place sign outside of board.");
         Preconditions.checkArgument(signs[square] == null, "Cannot place sign on already taken square.");
-        Preconditions.checkArgument(player.getPlayerSign().equals(currentSign),
+/*        Preconditions.checkArgument(player.getPlayerSign().equals(currentSign),
                                     String.format("Current turn is for sign %s",
                                                   player.getPlayerSign().other().name()));*/
 

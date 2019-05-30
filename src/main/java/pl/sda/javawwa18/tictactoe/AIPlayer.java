@@ -1,5 +1,7 @@
 package pl.sda.javawwa18.tictactoe;
 
+import java.util.Random;
+
 class AIPlayer extends Player {
 
     private Board board;
@@ -12,14 +14,29 @@ class AIPlayer extends Player {
         this.board = board;
         int bestScore = Integer.MIN_VALUE;
         int bestMove = -1;
+        int count = 0;
+        Random random = new Random();
         for (int i = 0; i < 9; i++) {
             if (board.getSigns()[i] == null) {
                 board.placeSign(this, i);
                 int currentScore = minimax(0, false);
                 board.getSigns()[i] = null;
                 if (currentScore > bestScore) {
+                    count = 0;
                     bestScore = currentScore;
                     bestMove = i;
+                } else if (currentScore == bestScore) {
+                    count++;
+                    if (count == 1) {
+                        bestScore = currentScore;
+                        bestMove = i;
+                    } else {
+                        int rand = random.nextInt(count);
+                        if (rand == 0) {
+                            bestScore = currentScore;
+                            bestMove = i;
+                        }
+                    }
                 }
             }
         }
