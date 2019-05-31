@@ -33,6 +33,10 @@ public class Player {
         return name;
     }
 
+    public boolean hit(Point point) {
+        return hit(point.x, point.y);
+    }
+
     public boolean hit(int x, int y) {
         GameObject object = opponentBoard.getObject(x, y);
         if (object.equals(GameObject.HIDDEN_SHIP)) {

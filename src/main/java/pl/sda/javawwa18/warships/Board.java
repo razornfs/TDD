@@ -2,9 +2,10 @@ package pl.sda.javawwa18.warships;
 
 import com.google.common.base.Preconditions;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.List;
+import java.util.Queue;
 
 public class Board {
     private GameObject[][] board;
@@ -15,15 +16,7 @@ public class Board {
         this(10, 10);
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public Board(int x, int y) {
+    private Board(int x, int y) {
         board = new GameObject[x][y];
         for (GameObject[] gameObjects : board) {
             Arrays.fill(gameObjects, GameObject.EMPTY_SPACE);
@@ -32,14 +25,22 @@ public class Board {
         this.y = y;
     }
 
-    private void rangeCheck(int x, int y) {
-        Preconditions.checkArgument(x >= 0 && x <= this.x, String.format("x has to be in range (%d, %d)", 0, this.x));
-        Preconditions.checkArgument(y >= 0 && y <= this.y, String.format("y has to be in range (%d, %d)", 0, this.y));
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public void setObject(int x, int y, GameObject object) {
         rangeCheck(x, y);
         board[x][y] = object;
+    }
+
+    private void rangeCheck(int x, int y) {
+        Preconditions.checkArgument(x >= 0 && x <= this.x, String.format("x has to be in range (%d, %d)", 0, this.x));
+        Preconditions.checkArgument(y >= 0 && y <= this.y, String.format("y has to be in range (%d, %d)", 0, this.y));
     }
 
     public GameObject getObject(int x, int y) {
@@ -126,7 +127,11 @@ public class Board {
         }
     }
 
-    public String getPrintableBoard() {
+    public void printBoard() {
+        System.out.println(getPrintableBoard());
+    }
+
+    private String getPrintableBoard() {
         StringBuilder stringBuilder = new StringBuilder("  ");
         for (int i = 0; i < x; i++) {
             stringBuilder.append(i);
@@ -142,7 +147,7 @@ public class Board {
         return stringBuilder.toString();
     }
 
-    public void printBoard() {
-        System.out.println(getPrintableBoard());
+    public boolean shipIsSunken(Point point) {
+        return shipIsSunken(point.x, point.y);
     }
 }

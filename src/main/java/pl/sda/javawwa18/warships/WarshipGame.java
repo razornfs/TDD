@@ -55,21 +55,15 @@ public class WarshipGame {
             player.getOpponentBoard().printBoard();
             System.out.println("Podaj współrzędne pola gdzie chcesz strzelić");
             Point playerHit;
-            int x;
-            int y;
             do {
-                System.out.print("X: ");
-                x = scanner.nextInt();
-                System.out.print("Y: ");
-                y = scanner.nextInt();
-                playerHit = new Point(x, y);
+                playerHit = getPointFromUser();
             } while (!player.getPlayerBoard().isInRange(playerHit));
-            boolean hit = player.hit(x, y);
+            boolean hit = player.hit(playerHit);
             if (!hit) {
                 System.out.println("Nie trafiłeś");
                 break;
             }
-            if (player.getOpponentBoard().shipIsSunken(x, y)) {
+            if (player.getOpponentBoard().shipIsSunken(playerHit)) {
                 System.out.println("Trafiony i zatopiony");
                 if (player.hasWon()) {
                     gameIsWon = true;
@@ -79,6 +73,7 @@ public class WarshipGame {
                 System.out.println("Trafiony");
             }
         }
+        System.out.println(winningPlayer.getName() + " has won!");
     }
 
     private static int getShipSize(Player player) {
@@ -102,14 +97,8 @@ public class WarshipGame {
     private static Point getShipStartPoint(Player player, int size) {
         System.out.println(String.format("%s, podaj współrzędne początku statku:", player.getName()));
         Point playerShipStartPointChoice;
-        int x;
-        int y;
         do {
-            System.out.print("X: ");
-            x = scanner.nextInt();
-            System.out.print("Y: ");
-            y = scanner.nextInt();
-            playerShipStartPointChoice = new Point(x, y);
+            playerShipStartPointChoice = getPointFromUser();
         } while (!isValidShipStartPointChoice(playerShipStartPointChoice, player.getPlayerBoard(), size));
         return playerShipStartPointChoice;
     }
@@ -133,6 +122,14 @@ public class WarshipGame {
             playerChoice = scanner.nextInt();
         } while (playerChoice < 0 || playerChoice >= pointsWithinDistance.size());
         return pointsWithinDistance.get(playerChoice);
+    }
+
+    private static Point getPointFromUser() {
+        System.out.print("X: ");
+        int x = scanner.nextInt();
+        System.out.print("Y: ");
+        int y = scanner.nextInt();
+        return new Point(x, y);
     }
 
     private static boolean isValidShipSizeChoice(int playerShipSizeChoice, int[] availableShips) {
