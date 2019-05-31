@@ -10,7 +10,7 @@ public class WarshipTest {
     //3 -
     //4 - FourMastedShip
 
-    @Test
+/*    @Test
     public void ship_is_placed_on_board() {
         Ship ship = new FourMastedShip();
         Player player = new Player();
@@ -20,10 +20,10 @@ public class WarshipTest {
         //assertions
         ships.isPlaced;
         ship.position == x, y
-    }
+    }*/
 
     //chodzi o przetestowanie player.getBoard().placeShip(ship, x1, y1, x2, y2);
-    @Test(dataProvider = )
+    @Test/*(dataProvider = )*/
     public void places_ship_for_valid_X2_Y2() {
 
     }
@@ -38,7 +38,7 @@ public class WarshipTest {
         //skrajne polozenie x1, y1 statku to rogi/boki planszy
     }
 
-    @DataProvider(name = "validX2Y2")
+/*    @DataProvider(name = "validX2Y2")
     public Object[][] validPositions() {
         return new Object[][] {
                 {FourMastedShip, Point(10, 10), {Point(10, 7), Point(7, 10)}}
@@ -58,7 +58,7 @@ public class WarshipTest {
                 {ThreeMastedShip, 3},
                 {FourMastedShip, 4},
         };
-    }
+    }*/
 
     @Test(dataProvider = "shipsStats")
     public void ships_of_different_types_has_according_attributes() {

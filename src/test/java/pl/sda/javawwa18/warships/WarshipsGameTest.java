@@ -26,14 +26,14 @@ public class WarshipsGameTest {
 
     }
 
-    @DataProvider(name = "commandsForAction")+
+/*    @DataProvider(name = "commandsForAction")+
     public Object[][] getCommandsForAction() {
         return new Object[][] {
                 {Point(1, 1), Command.SINKED},
                 {Point(2, 5), Command.HIT},
                 {Point(6, 5), Command.LOST}
         };
-    }
+    }*/
 
     @Test(dataProvider = "commandsForAction")
     public void gets_correct_command_for_action() {

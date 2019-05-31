@@ -3,6 +3,7 @@ package pl.sda.javawwa18.tictactoe;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -62,17 +63,6 @@ public class TicTacToeTest {
     }
 
     @Test
-    public void starting_sign_starts_game() {
-        board.placeSign(playerX, 4);
-        Assertions.assertThat(board.getSigns()[4]).isEqualTo(playerX.getPlayerSign());
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void non_starting_sign_cannot_start_game() {
-        board.placeSign(playerO, 4);
-    }
-
-    @Test
     public void prints_correct_board_for_given_game_state() {
         board.placeSign(playerX, 4);
         board.placeSign(playerO, 8);
@@ -94,7 +84,7 @@ public class TicTacToeTest {
         board.placeSign(playerO, 2);
 
         Assertions.assertThat(board.convertBoardToSequence()).isEqualTo(
-            "X.O.X...O"
+                "X.O.X...O"
         );
     }
 
@@ -131,68 +121,4 @@ public class TicTacToeTest {
 
         Assertions.assertThat(board.checkGameWon(playerX)).isTrue();
     }
-
-    //test for AI game
-    @Test
-    public void AI_player_starts_game_first() {
-        aiPlayer = new AIPlayer(Board.Sign.X);
-        aiPlayer.makeMove(board);
-
-        Assertions.assertThat(board.getSigns()[4]).isEqualTo(aiPlayer.getPlayerSign());
-    }
-
-    @Test
-    public void first_AI_player_move_is_2nd() {
-        aiPlayer = new AIPlayer(Board.Sign.O);
-        board.placeSign(playerX, 4);
-        int squareChoosen = aiPlayer.makeMove(board);
-
-        Assertions.assertThat(squareChoosen).isIn(0, 2, 6, 8);
-        Assertions.assertThat(board.getSigns()[squareChoosen]).isEqualTo(aiPlayer.getPlayerSign());
-    }
-
-    @DataProvider(name = "scoringSequences")
-    public Object[][] scoreSequences() {
-        return new Object[][] {
-                {"SSS......", 3},
-                {"...SSS...", 0},
-                {"......SSS", 1},
-                {"S..S..S..", 4},
-                {".S..S..S.", 0},
-                {"..S..S..S", 0},
-                {"S...S...S", -3},
-                {"..S.S.S..", 1}
-        };
-    }
-
-    @Test(dataProvider = "scoringSequences")
-    public void scores_sequence(String sequenceToEvaluate, int expectedScore) {
-        aiPlayer = new AIPlayer(Board.Sign.O);
-        int actualScore = aiPlayer.scoreGivenSequence(sequenceToEvaluate, "....X.O.X");
-        Assertions.assertThat(actualScore).isEqualTo(expectedScore);
-    }
-
-    @Test
-    public void sorts_sequences_by_score() {
-        aiPlayer = new AIPlayer(Board.Sign.O);
-        List<String> sequencesSortedByScore = Arrays.asList(Board.winningSequences);
-        aiPlayer.sortSequencesByScore(sequencesSortedByScore, "....X.O.X");
-
-        Assertions.assertThat(sequencesSortedByScore.get(0)).isEqualTo("S...S...S");
-        Assertions.assertThat(sequencesSortedByScore.get(sequencesSortedByScore.size()-1)).isEqualTo("S..S..S..");
-    }
-
-    @Test
-    public void makes_move_by_taking_enemies_square() {
-        aiPlayer = new AIPlayer(Board.Sign.O);
-        board.placeSign(playerX, 4);
-        board.placeSign(aiPlayer, 6);
-        aiPlayer.isFirstMove = false;
-        board.placeSign(playerX, 8);
-        int choosenSquare = aiPlayer.makeMove(board);
-
-        Assertions.assertThat(choosenSquare).isIn(0);
-        Assertions.assertThat(board.getSigns()[choosenSquare]).isEqualTo(aiPlayer.getPlayerSign());
-    }
-
 }
