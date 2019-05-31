@@ -89,18 +89,13 @@ public class Board {
     }
 
     public boolean shipIsSunken(int x, int y) {
-        if (getObject(x, y) != GameObject.HIT_SHIP) {
-            return false;
-        }
         Boolean[][] visited = new Boolean[this.x][this.y];
         for (Boolean[] booleans : visited) {
             Arrays.fill(booleans, false);
         }
-        visited[x][y] = true;
-        List<Point> availablePointsWithinDistance = getAvailablePointsWithinDistance(new Point(x, y), 1);
-        clearEmptySpacesAndPointsAlreadyVisited(availablePointsWithinDistance, visited);
-        Queue<Point> points = new LinkedList<>(availablePointsWithinDistance);
-        while (!points.isEmpty()) {
+        Queue<Point> points = new LinkedList<>();
+        points.add(new Point(x, y));
+        do {
             Point point = points.remove();
             if (getObject(point.x, point.y) == GameObject.HIDDEN_SHIP) {
                 return false;
@@ -109,7 +104,7 @@ public class Board {
             clearEmptySpacesAndPointsAlreadyVisited(adjacentPoints, visited);
             points.addAll(adjacentPoints);
             visited[point.x][point.y] = true;
-        }
+        } while (!points.isEmpty());
         return true;
     }
 
