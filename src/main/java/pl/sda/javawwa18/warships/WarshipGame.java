@@ -37,6 +37,7 @@ public class WarshipGame {
             move(p1);
             move(p2);
         }
+        System.out.println(winningPlayer.getName() + " wygrał!");
     }
 
     private static void placeShips(Player player) {
@@ -68,12 +69,12 @@ public class WarshipGame {
                 if (player.hasWon()) {
                     gameIsWon = true;
                     winningPlayer = player;
+                    return;
                 }
             } else {
                 System.out.println("Trafiony");
             }
         }
-        System.out.println(winningPlayer.getName() + " has won!");
     }
 
     private static int getShipSize(Player player) {
